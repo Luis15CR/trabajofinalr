@@ -1,0 +1,132 @@
+---
+title: "TRABAJO FINAL R"
+author: LUIS CAMPO RIOS
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_document:
+   theme: lumen
+
+---
+========================================================================================================
+
+```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = TRUE)
+
+library(xml2)
+library(rvest)
+library(lubridate)
+library(dplyr)
+library(ggplot2)
+library(stringr)
+library(tidyr)
+library(scales)
+library(plotly)
+library(knitr)
+
+
+# Lectura de la tabla usando Scraping y limpieza de datos
+url.expor <- "https://datosmacro.expansion.com/comercio/exportaciones?anio=2018"
+datos <- read_html(url.expor)
+datos <- html_nodes(datos,"table")
+length(datos)
+sapply(datos, class)
+sapply(datos, function(x) dim(html_table(x, fill = TRUE)))
+datos <- html_table(datos[[1]],header = T)
+datos <- data.frame(datos,stringsAsFactors = FALSE)
+datos$Exportaciones.1 <- NULL
+datos
+names(datos) <- c("Paises","Fecha","Export(€)","PIB(%)","VAR")
+datos$Paises <- gsub("\\[\\+\\]", "",datos$Paises)
+datos$`Export(€)` <- gsub("M.€","",datos$`Export(€)`)
+datos$Fecha <- as.numeric(datos$Fecha)
+datos$`Export(€)` <- gsub("\\.","",datos$`Export(€)`)
+datos$`Export(€)` <- gsub(",","\\.",datos$`Export(€)`)
+datos$`Export(€)`<- as.numeric(datos$`Export(€)`)
+datos$`PIB(%)` <- gsub("%","",datos$`PIB(%)`)
+datos$`PIB(%)` <- gsub(",",".",datos$`PIB(%)`)
+datos$`PIB(%)` <- as.numeric(datos$`PIB(%)`)
+datos$VAR <- gsub(",",".",datos$VAR)
+datos$VAR <- as.numeric(datos$VAR)
+str(datos)
+#Extrayengo el Top 10 de paises
+
+datos <- datos[order(-datos$`Export(€)`),]
+datosend <- head(datos, n=10)
+datosend
+
+
+```
+
+<span style="color:black"><center><h1>**INTRODUCCION**</h1></center></span>
+
+<span style="color:black"><p align="justify">**EN EL DESARROLLO DE ESTE DOCUMENTO REALIZAREMOS COMENTARIO SOBRE ALGUNAS WEB QUE SE ENFOCAN A EXPRESIONES REGULARES Y A RMARKDOWN Y A SU VEZ SE REALIZARA CONSTRUCCION DE GRAFICO DESDE LA EXTRACCION DE DATA DE INFORMACION MEDIANTE WEBSCRAPING, EL TEMA USADO ES PAISES CON MEJOR EXPORTACION.**</p>
+
+1.<span style="color:red"><h4>*EXPRESIONES REGULARES*</h4></span>
+
+A.<span style="color:Green">*Este primer foro de expresiones regulares, el cual fue documentado por Diego calvo Barreno, Technical Lead - Machine learning & Big Data, en este foro Diego nos enseña las mejores expresiones en donde nos ayuda a entender con cada una de las syntaxis detallas. a continuacion les dejo el enlace.*
+**<span style="color:Red">[**Diego Calvo**](<http://www.diegocalvo.es/expresiones-regulares-en-r/>)
+
+**<span style="color:black">Algunos ejemplos de las expresiones que nos indica Diego**:
+
+| EXPRESION | DESCRIPCION                | 
+| :-------  | :---------------------:    | 
+| Substring | Seleccionar un substring   | 
+| GREP      | Encuentra patrones de la expresión regular en la cadena|
+
+
+B. 
+
+
+
+```{r tabladatos, echo=FALSE}
+kable(datosend, format = "markdown" ,caption = "Una kable knitr",digits = 3
+ , col.names = c("Paises","Fecha","Export(€)","PIB(%)","VAR"), row.names = TRUE)
+```
+## GRAFICOS GGPLOT
+
+A continuacion, se muestra dos graficos en donde observaremos :
+
+1.Grafico 1  : Nos muestra el paise con mayor exportacion y su varianza en % con respecto al año anterior.
+
+
+```{r pressure, echo=FALSE}
+# GRAFICO DONDE SE RESALTA EL PAISES QUE MAYOR EXPORTACION HA TENIDO Y SU VARIACION EN %
+
+
+VAR <- datosend$VAR
+grafico1 <- plot_ly(datosend, x = ~Paises, y = ~`Export(€)`, type = "bar", text =VAR,
+        marker = list(color = c('rgba(270,45,38,2)', 'rgba(204,204,204,1)',
+                                'rgba(204,204,204,1)', 'rgba(204,204,204,1)',
+                                'rgba(204,204,204,1)', 'rgba(204,204,204,1)',
+                                'rgba(204,204,204,1)', 'rgba(204,204,204,1)',
+                                'rgba(204,204,204,1)','rgba(204,204,204,1)')),
+name = "Paises")%>% layout(title = "TOP 10 PAISES CON MAS EXPORTACION Y VARIANZA")
+
+grafico1
+
+```
+2.Grafico 2 : Nos muestra  el top 10 de los paises con respecto a su producto interno bruto (PIB %).
+
+```{r grafico2, echo=FALSE}
+
+# Realizando grafico de barras usando GGplot2, comparando paises vs Mayor PIB
+
+grafico2 <- datosend %>%
+  arrange(desc(datosend$`PIB(%)`)) %>%
+  mutate(Paises = factor(Paises , level =  Paises)) %>%
+  ggplot(aes(Paises, `PIB(%)`)) + 
+  geom_bar(stat = "identity",
+           fill = "light blue",
+           color ="black"
+           ) + 
+  geom_text(aes(label = comma((`PIB(%)`))),
+              vjust= - 0.3) +
+  labs(x = "Paises", y= "Exportaciones en PIB %",
+        title= "PAISES CON MAS EXPORTACION EN BASE A SU PIB (%)") +
+  scale_y_continuous(labels = comma) +
+ theme_minimal()
+  #coord_flip()
+grafico2 
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
