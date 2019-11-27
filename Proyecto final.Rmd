@@ -1,17 +1,16 @@
 ---
-title: "TRABAJO FINAL R"
+title: "TRABAJO FINAL RSTUDIO"
 author: LUIS CAMPO RIOS
 date: "`r Sys.Date()`"
 output:
-  rmarkdown::html_document:
-   theme: lumen
+  prettydoc::html_pretty:
+   theme: cayman  
+   highlight: github
+   math: katex
 
 ---
-========================================================================================================
-
 ```{r setup, include=FALSE}
-#knitr::opts_chunk$set(echo = TRUE)
-
+##knitr::opts_chunk$set(echo = TRUE)
 library(xml2)
 library(rvest)
 library(lubridate)
@@ -22,7 +21,7 @@ library(tidyr)
 library(scales)
 library(plotly)
 library(knitr)
-
+library(prettydoc)
 
 # Lectura de la tabla usando Scraping y limpieza de datos
 url.expor <- "https://datosmacro.expansion.com/comercio/exportaciones?anio=2018"
@@ -54,40 +53,56 @@ datos <- datos[order(-datos$`Export(€)`),]
 datosend <- head(datos, n=10)
 datosend
 
-
 ```
 
-<span style="color:black"><center><h1>**INTRODUCCION**</h1></center></span>
+<center><h1>**INTRODUCCIÓN**</h1></center>
 
-<span style="color:black"><p align="justify">**EN EL DESARROLLO DE ESTE DOCUMENTO REALIZAREMOS COMENTARIO SOBRE ALGUNAS WEB QUE SE ENFOCAN A EXPRESIONES REGULARES Y A RMARKDOWN Y A SU VEZ SE REALIZARA CONSTRUCCION DE GRAFICO DESDE LA EXTRACCION DE DATA DE INFORMACION MEDIANTE WEBSCRAPING, EL TEMA USADO ES PAISES CON MEJOR EXPORTACION.**</p>
+<p align="justify">**EN EL DESARROLLO DE ESTE DOCUMENTO REALIZAREMOS COMENTARIO SOBRE ALGUNAS PAGINAS WEB QUE SE ENFOCAN A EXPRESIONES REGULARES Y A RMARKDOWN, A SU VEZ SE REALIZARA CONSTRUCCION DE GRAFICO DESDE LA EXTRACCION DE DATA DE INFORMACION MEDIANTE WEBSCRAPING, EL TEMA USADO ES PAISES CON MEJOR EXPORTACION HASTA LA FECHA.**</p>
 
-1.<span style="color:red"><h4>*EXPRESIONES REGULARES*</h4></span>
+<h4><center>**1.EXPRESIONES REGULARES**</center></h4>
 
-A.<span style="color:Green">*Este primer foro de expresiones regulares, el cual fue documentado por Diego calvo Barreno, Technical Lead - Machine learning & Big Data, en este foro Diego nos enseña las mejores expresiones en donde nos ayuda a entender con cada una de las syntaxis detallas. a continuacion les dejo el enlace.*
-**<span style="color:Red">[**Diego Calvo**](<http://www.diegocalvo.es/expresiones-regulares-en-r/>)
+<span style="color:black">Para esta seccion he revisado y analizado dos paginas wen relacionados a expresiones regulares, los autores son : <span style="color:blue">[**Diego Calvo**](<http://www.diegocalvo.es/expresiones-regulares-en-r/>),<span style="color:blue">[**Kenneth Cabrera**](https://labscn-unalmed.github.io/modulo-R/slides/11_Expresiones_Regulares.html#/) 
 
-**<span style="color:black">Algunos ejemplos de las expresiones que nos indica Diego**:
+<p>Diego nos brinda variedad de expresiones regulares comunes y con sus propias sintaxys, concepto, asu vez nos brinda ejemplos de cada uno de ellos facil y sensillo de entenderlo, a comparación con la web de Kenneth si bien es cierto tiene buenos ejemplos pero no tiene la misma cantidad de expresiones regulares que Diego Calvo.</p>
 
-| EXPRESION | DESCRIPCION                | 
-| :-------  | :---------------------:    | 
-| Substring | Seleccionar un substring   | 
-| GREP      | Encuentra patrones de la expresión regular en la cadena|
+<p>Por otro lado, kanneth en cuanto a comparaciòn de una expresion regular **gsub**, tiene mas ejemplos y claros con respecto a Diego calvo, por lo tanto yo me quedaria con Diego calvo en cuanto a su variedad y ejemmlos de expresiones, sin embargo a kanneth lo tendria en cuenta para cualquier duda que se presente en una la expresion gsub.</p>
+
+En la siguiente tabla, mostrare algunas de las expresiones con sus respectiva descripción,para Rstudio.
+
+| EXPRESION | DESCRIPCION                                                                                   | 
+| :-------  | :--------------------------------------------------------------------------------------------:| 
+| Substring | Seleccionar un substring                                                                      |
+| GREP      | Encuentra patrones de la expresión regular en la cadena                                       |
+| GREPL     | Determina si una sub-cadena pertenece a una cadena                                            |
+| GSUB      | Sustituye en una cadena los elementos que cumplan la expresión regular por otro que se indique|
 
 
-B. 
+<h4><center>**2. RECURSO RMARKDOWN**</center></h4>
+ 
+Para esta sección hablaremos de:<span style="color:blue">[**Javier Cristóbal**](<https://markdown.es/sintaxis-markdown/>),<span style="color:blue">[**Tomas Goicoa**](<http://www.unavarra.es/personal/tgoicoa/ESTADISTICA_RMarkdown_tomas/basicRmarkdown/index.html#143_formatos_de_texto>):
+
+<span style="color:Green">**Javier Cristóbal**</span> hizo un web que inicia desde el **Que** es rmarkdown, la **Sintaxis**", **editores** de markdown y **multimarkdown**, en el cual dentro de ello tiene un indice de sintaxis en donde explica muy bien cada punto tales como: Parrafos, Emcabezados, Citas,Listas...etc.
+
+En cambio <span style="color:Green">**Tomas Goicoa**</span>, nos brinda una guida sensilla pero a la vez util mostrando los tipos de archivo que se ejecutan, explica el cuerpo del documento, los formato de texto y un ejemplo.
+
+Dicho a todo esto, yo me quedaria con la web de Javier ya que esta mejor explicada y tiene mas campo de aprendizaje referente a rmarkdown.
 
 
+<h3>**3.TABLA DE CONTENIDO SOBRE Nº DE EX**</h3>
 
+Las exportaciones son las ventas de bienes que un país realiza al resto. Las exportaciones suman dentro de la balanza comercial, cuando son mayores que las importaciones la balanza comercial es positiva, o lo que es lo mismo, hay superávit de balanza comercial.
+
+Las exportaciones son importantes porque constituyen una fuente de divisas que a su vez permiten hacer frente a la deuda y a las importaciones y que incrementan los ingresos per cápita. El hecho de que se produzcan bienes para su exportación, incrementa la producción de estos y esto tiene un efecto positivo sobre el empleo.
 ```{r tabladatos, echo=FALSE}
 kable(datosend, format = "markdown" ,caption = "Una kable knitr",digits = 3
  , col.names = c("Paises","Fecha","Export(€)","PIB(%)","VAR"), row.names = TRUE)
 ```
+
 ## GRAFICOS GGPLOT
 
-A continuacion, se muestra dos graficos en donde observaremos :
+**A continuacion, se muestra dos graficos en donde observaremos:**
 
-1.Grafico 1  : Nos muestra el paise con mayor exportacion y su varianza en % con respecto al año anterior.
-
+**A.Grafico 1 : Nos muestra el top 10 de los paises con mayor exportacion y su varianza en % con respecto al año anterior, el cual se mostrara cuando pasemos el curso en una de las barras, a la ves esta resaltado de color rojo el pais con mayor cantidad en exportacion (euros).**
 
 ```{r pressure, echo=FALSE}
 # GRAFICO DONDE SE RESALTA EL PAISES QUE MAYOR EXPORTACION HA TENIDO Y SU VARIACION EN %
@@ -105,7 +120,8 @@ name = "Paises")%>% layout(title = "TOP 10 PAISES CON MAS EXPORTACION Y VARIANZA
 grafico1
 
 ```
-2.Grafico 2 : Nos muestra  el top 10 de los paises con respecto a su producto interno bruto (PIB %).
+
+**B.Grafico 2 : Nos muestra  el top 10 de los paises con respecto a su producto interno bruto (PIB %).**
 
 ```{r grafico2, echo=FALSE}
 
@@ -128,5 +144,3 @@ grafico2 <- datosend %>%
   #coord_flip()
 grafico2 
 ```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
