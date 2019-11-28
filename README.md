@@ -1,4 +1,5 @@
 # trabajofinalr
+Librerias que he usado para realizar este proyecto.
 * xml2
 * rvest
 * lubridate
