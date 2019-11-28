@@ -14,19 +14,19 @@ output:
  
 <center><h1>**INTRODUCCIÓN**</h1></center>
 
-<p align="justify">**EN EL DESARROLLO DE ESTE DOCUMENTO REALIZAREMOS COMENTARIO SOBRE ALGUNAS PAGINAS WEB QUE SE ENFOCAN A EXPRESIONES REGULARES Y A RMARKDOWN, A SU VEZ SE REALIZARA CONSTRUCCION DE GRAFICO DESDE LA EXTRACCION DE DATA DE INFORMACION MEDIANTE WEBSCRAPING, EL TEMA USADO ES PAISES CON MEJOR EXPORTACION.**</p>
+<p align="justify">**EN EL DESARROLLO DE ESTE DOCUMENTO REALIZAREMOS COMENTARIO SOBRE ALGUNAS PÁGINAS WEB QUE SE ENFOCAN A EXPRESIONES REGULARES Y A RMARKDOWN, A SU VEZ SE REALIZARA CONSTRUCCIÓN DEL GRAFICO DESDE LA EXTRACCION DE DATA DE INFORMACIÓN MEDIANTE WEBSCRAPING, EL TEMA USADO ES PAÍSES CON MEJOR EXPORTACIÓN.**</p>
 
 <h4><center>**1.EXPRESIONES REGULARES**</center></h4>
 
-<span style="color:black">Para esta seccion he revisado y analizado dos paginas wen relacionados a expresiones regulares, los autores son : <span style="color:blue">[**Diego Calvo**](<http://www.diegocalvo.es/expresiones-regulares-en-r/>),<span style="color:blue">[**Kenneth Cabrera**](https://labscn-unalmed.github.io/modulo-R/slides/11_Expresiones_Regulares.html#/) 
+<span style="color:black">Para esta seccion he revisado y analizado dos paginas web relacionados a expresiones regulares, los autores son : <span style="color:blue">[**Diego Calvo**](<http://www.diegocalvo.es/expresiones-regulares-en-r/>),<span style="color:blue">[**Kenneth Cabrera**](https://labscn-unalmed.github.io/modulo-R/slides/11_Expresiones_Regulares.html#/) 
 
-<p>Diego nos brinda variedad de expresiones regulares comunes y con sus propias sintaxys, concepto, asu vez nos brinda ejemplos de cada uno de ellos facil y sensillo de entenderlo, a comparación con la web de Kenneth si bien es cierto tiene buenos ejemplos pero no tiene la misma cantidad de expresiones regulares que Diego Calvo.</p>
+<p>Diego nos brinda variedad de expresiones regulares comunes y con sus propias sintaxis, concepto, asu vez nos brinda ejemplos de cada uno de ellos fácil y sensillo de entenderlo, a comparación con la web de Kenneth si bien es cierto tiene buenos ejemplos pero no tiene la misma cantidad de expresiones regulares que Diego Calvo.</p>
 
-<p>Por otro lado, kanneth en cuanto a comparaciòn de una expresion regular **gsub**, tiene mas ejemplos y claros con respecto a Diego calvo, por lo tanto yo me quedaria con Diego calvo en cuanto a su variedad y ejemmlos de expresiones, sin embargo a kanneth lo tendria en cuenta para cualquier duda que se presente en una la expresion gsub.</p>
+<p>Por otro lado, kanneth en cuanto a comparación de una expresión regular **gsub**, tiene mas ejemplos y claros con respecto a Diego calvo, por lo tanto yo me quedaria con Diego calvo en cuanto a su variedad y ejemmlos de expresiones, sin embargo a kanneth lo tendria en cuenta para cualquier duda que se presente en referencia a la expresión gsub u otros.</p>
 
-En la siguiente tabla, mostrare algunas de las expresiones con sus respectiva descripción,para Rstudio.
+En la siguiente tabla, mostraré algunas de las expresiones con sus respectiva descripción,para Rstudio.
 
-| EXPRESION | DESCRIPCION                                                                                   | 
+| EXPRESIÖN | DESCRIPCIÓN                                                                                   | 
 | :-------: | :--------------------------------------------------------------------------------------------:| 
 | Substring | Seleccionar un substring                                                                      |
 | GREP      | Encuentra patrones de la expresión regular en la cadena                                       |
@@ -38,9 +38,9 @@ En la siguiente tabla, mostrare algunas de las expresiones con sus respectiva de
  
 Para esta sección hablaremos de:<span style="color:blue">[**Javier Cristóbal**](<https://markdown.es/sintaxis-markdown/>),<span style="color:blue">[**Tomas Goicoa**](<http://www.unavarra.es/personal/tgoicoa/ESTADISTICA_RMarkdown_tomas/basicRmarkdown/index.html#143_formatos_de_texto>):
 
-<span style="color:Green">**Javier Cristóbal**</span> hizo un web que inicia desde el **Que** es rmarkdown, la **Sintaxis**", **editores** de markdown y **multimarkdown**, en el cual dentro de ello tiene un indice de sintaxis en donde explica muy bien cada punto tales como: Parrafos, Emcabezados, Citas,Listas...etc.
+<span style="color:Green">**Javier Cristóbal**</span> hizo un web que inicia desde el **Que** es rmarkdown, la **Sintaxis**", **editores** de markdown y **multimarkdown**, en el cual dentro de ello tiene un indice de sintaxis en donde explica muy bien cada punto tales como: Párrafos, Emcabezados, Citas,Listas...etc.
 
-En cambio <span style="color:Green">**Tomas Goicoa**</span>, nos brinda una guida sensilla pero a la vez util mostrando los tipos de archivo que se ejecutan, explica el cuerpo del documento, los formato de texto y un ejemplo.
+En cambio <span style="color:Green">**Tomas Goicoa**</span>, nos brinda una guida sencílla pero a la vez útil mostrando los tipos de archivo que se ejecutan, explica el cuerpo del documento, los formato de texto y un ejemplo.
 
 Dicho a todo esto, yo me quedaria con la web de Javier ya que esta mejor explicada y tiene mas campo de aprendizaje referente a rmarkdown.
 
@@ -99,10 +99,10 @@ grafico1 <- plot_ly(datosend, x = ~Paises, y = ~Exportaciones, type = "bar", tex
                                             'rgba(204,204,204,1)', 'rgba(204,204,204,1)',
                                             'rgba(204,204,204,1)', 'rgba(204,204,204,1)',
                                             'rgba(204,204,204,1)','rgba(204,204,204,1)')),
-                    name = "Paises")%>% layout(title = "TOP 10 PAISES CON MAS EXPORTACION Y VARIANZA")
+                    name = "Paises")%>% layout(title = "TOP 10 PAISES CON MAS EXPORTACION Y VARIANCIÓN")
 grafico1
 
-# asdasd
+# GRAFICO DONDE SE RESALTA LA VARIANZA Y PIB
 
 f <- list(family = "Arial Black", size = 18, color = "#7f7f7f")
 x <- list(title = "Varianza",titlefont = f)
@@ -115,6 +115,7 @@ grafico2 <- plot_ly(data = datosend, x = datosend$VAR, y = datosend$`PIB(%)`,
 grafico2
 
 # Realizando grafico de barras usando GGplot2, comparando paises vs Mayor PIB
+
 grafico3 <- datosend %>%
   arrange(desc(datosend$`PIB(%)`)) %>%
   mutate(Paises = factor(Paises , level =  Paises)) %>%
@@ -145,7 +146,7 @@ kable(datosend, format = "markdown" ,caption = "Una kable knitr",digits = 3
 ```
 **A continuacion, se muestra 3 graficos en donde observaremos lo siguiente:**
 
-**A.Grafico 1: Muestra el top 10 de los paises con mayor exportacion y su varianza en % con respecto al año anterior, China tiene la mayor en exportaciones (Euros), y su PIB se incrementada de a pocos,esto nos dice que china sigue creciendo,por otro lado, cuando pasemos el curso en una de las barras se muestra la cantidad exacta y su varianza, a la ves esta resaltado de color rojo el pais con mayor cantidad en exportacion (euros).**
+**A.Grafico 1: Muestra el top 10 de los países con mayor exportacion y su varianza en % con respecto al año anterior, China tiene la mayor en exportaciones (Euros), y su PIB se incrementada de a pocos,esto nos dice que china sigue creciendo,por otro lado, cuando pasemos el curso en una de las barras se muestra la cantidad exacta y su varianza, a la ves esta resaltado de color rojo el país con mayor cantidad en exportación (euros).**
 
 ```{r pressure, echo=FALSE}
 # GRAFICO DONDE SE RESALTA EL PAISES QUE MAYOR EXPORTACION HA TENIDO Y SU VARIACION EN %
@@ -162,7 +163,7 @@ grafico1
 
 grafico2 
 ```
-**C.Grafico 3 : Nos muestra el top 10 de los paises con respecto a su Exportacion (PIB %), por lo tanto se concluye que china es el pais que mas exporta en el mundo, aunque tiene una varianza negativa, todavia sigue crecimiento ya que es superior a muchos**
+**C.Grafico 3 : Nos muestra el top 10 de los países con respecto a su exportación (PIB %), por lo tanto se concluye que china es el país que mas exporta en el mundo, aunque tiene una varianza negativa, todavia sigue crecimiento ya que es superior a muchos**
 ```{r grafico3, echo=FALSE, message=FALSE}
 # Realizando grafico de barras usando GGplot2, comparando paises vs Mayor PIB
 grafico3
