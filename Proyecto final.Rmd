@@ -105,9 +105,9 @@ grafico1
 # GRAFICO DONDE SE RESALTA LA VARIANZA Y PIB
 
 f <- list(family = "Arial Black", size = 18, color = "#7f7f7f")
-x <- list(title = "Varianza",titlefont = f)
-y <- list(title = "Exportacion PIB(%)",titlefont = f)
-t <- list(title = "VARIANZA Y PIB(%)",titlefont = f)
+x <- list(title = "VARIANZA",titlefont = f)
+y <- list(title = "EXPORTACIÓN PIB(%)",titlefont = f)
+t <- list(title = "VARIACIÒN Y PIB(%)",titlefont = f)
 
 grafico2 <- plot_ly(data = datosend, x = datosend$VAR, y = datosend$`PIB(%)`, 
                     name = datosend$Paises, span =30) %>%
@@ -163,6 +163,9 @@ grafico1
 
 grafico2 
 ```
+
+
+
 **C.Grafico 3 : Nos muestra el top 10 de los países con respecto a su exportación (PIB %), por lo tanto se concluye que china es el país que mas exporta en el mundo, aunque tiene una varianza negativa, todavia sigue crecimiento ya que es superior a muchos**
 ```{r grafico3, echo=FALSE, message=FALSE}
 # Realizando grafico de barras usando GGplot2, comparando paises vs Mayor PIB
