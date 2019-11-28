@@ -1,5 +1,6 @@
 ---
-title: "TRABAJO FINAL RSTUDIO"
+title: "TRABAJO FINAL RSTUDIO" 
+subtitle: "EXPORTACIÓN A NIVEL MUNDIAL"
 author: LUIS CAMPO RIOS
 date: "`r Sys.Date()`"
 output:
@@ -7,57 +8,13 @@ output:
    theme: cayman  
    highlight: github
    math: katex
-
+   toc: yes
+   
 ---
-```{r setup, include=FALSE}
-##knitr::opts_chunk$set(echo = TRUE)
-library(xml2)
-library(rvest)
-library(lubridate)
-library(dplyr)
-library(ggplot2)
-library(stringr)
-library(tidyr)
-library(scales)
-library(plotly)
-library(knitr)
-library(prettydoc)
-
-# Lectura de la tabla usando Scraping y limpieza de datos
-url.expor <- "https://datosmacro.expansion.com/comercio/exportaciones?anio=2018"
-datos <- read_html(url.expor)
-datos <- html_nodes(datos,"table")
-length(datos)
-sapply(datos, class)
-sapply(datos, function(x) dim(html_table(x, fill = TRUE)))
-datos <- html_table(datos[[1]],header = T)
-datos <- data.frame(datos,stringsAsFactors = FALSE)
-datos$Exportaciones.1 <- NULL
-datos
-names(datos) <- c("Paises","Fecha","Export(€)","PIB(%)","VAR")
-datos$Paises <- gsub("\\[\\+\\]", "",datos$Paises)
-datos$`Export(€)` <- gsub("M.€","",datos$`Export(€)`)
-datos$Fecha <- as.numeric(datos$Fecha)
-datos$`Export(€)` <- gsub("\\.","",datos$`Export(€)`)
-datos$`Export(€)` <- gsub(",","\\.",datos$`Export(€)`)
-datos$`Export(€)`<- as.numeric(datos$`Export(€)`)
-datos$`PIB(%)` <- gsub("%","",datos$`PIB(%)`)
-datos$`PIB(%)` <- gsub(",",".",datos$`PIB(%)`)
-datos$`PIB(%)` <- as.numeric(datos$`PIB(%)`)
-datos$VAR <- gsub(",",".",datos$VAR)
-datos$VAR <- as.numeric(datos$VAR)
-str(datos)
-#Extrayengo el Top 10 de paises
-
-datos <- datos[order(-datos$`Export(€)`),]
-datosend <- head(datos, n=10)
-datosend
-
-```
-
+ 
 <center><h1>**INTRODUCCIÓN**</h1></center>
 
-<p align="justify">**EN EL DESARROLLO DE ESTE DOCUMENTO REALIZAREMOS COMENTARIO SOBRE ALGUNAS PAGINAS WEB QUE SE ENFOCAN A EXPRESIONES REGULARES Y A RMARKDOWN, A SU VEZ SE REALIZARA CONSTRUCCION DE GRAFICO DESDE LA EXTRACCION DE DATA DE INFORMACION MEDIANTE WEBSCRAPING, EL TEMA USADO ES PAISES CON MEJOR EXPORTACION HASTA LA FECHA.**</p>
+<p align="justify">**EN EL DESARROLLO DE ESTE DOCUMENTO REALIZAREMOS COMENTARIO SOBRE ALGUNAS PAGINAS WEB QUE SE ENFOCAN A EXPRESIONES REGULARES Y A RMARKDOWN, A SU VEZ SE REALIZARA CONSTRUCCION DE GRAFICO DESDE LA EXTRACCION DE DATA DE INFORMACION MEDIANTE WEBSCRAPING, EL TEMA USADO ES PAISES CON MEJOR EXPORTACION.**</p>
 
 <h4><center>**1.EXPRESIONES REGULARES**</center></h4>
 
@@ -70,7 +27,7 @@ datosend
 En la siguiente tabla, mostrare algunas de las expresiones con sus respectiva descripción,para Rstudio.
 
 | EXPRESION | DESCRIPCION                                                                                   | 
-| :-------  | :--------------------------------------------------------------------------------------------:| 
+| :-------: | :--------------------------------------------------------------------------------------------:| 
 | Substring | Seleccionar un substring                                                                      |
 | GREP      | Encuentra patrones de la expresión regular en la cadena                                       |
 | GREPL     | Determina si una sub-cadena pertenece a una cadena                                            |
@@ -87,47 +44,78 @@ En cambio <span style="color:Green">**Tomas Goicoa**</span>, nos brinda una guid
 
 Dicho a todo esto, yo me quedaria con la web de Javier ya que esta mejor explicada y tiene mas campo de aprendizaje referente a rmarkdown.
 
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+##knitr::opts_chunk$set(echo = TRUE)
+library(xml2)
+library(rvest)
+library(lubridate)
+library(dplyr)
+library(ggplot2)
+library(stringr)
+library(tidyr)
+library(scales)
+library(plotly)
+library(knitr)
+library(prettydoc)
 
-<h3>**3.TABLA DE CONTENIDO SOBRE Nº DE EX**</h3>
+#Lectura de la tabla usando Scraping y limpieza de datos
+url.expor <- "https://datosmacro.expansion.com/comercio/exportaciones?anio=2018"
+datos <- read_html(url.expor)
+datos <- html_nodes(datos,"table")
+length(datos)
+sapply(datos, class)
+sapply(datos, function(x) dim(html_table(x, fill = TRUE)))
+datos <- html_table(datos[[1]],header = T)
+datos <- data.frame(datos,stringsAsFactors = FALSE)
+datos$Exportaciones.1 <- NULL
+datos
+names(datos) <- c("Paises","Fecha","Exportaciones","PIB(%)","VAR")
+datos$Paises <- gsub("\\[\\+\\]", "",datos$Paises)
+datos$Exportaciones <- gsub("M.€","",datos$Exportaciones)
+datos$Fecha <- as.numeric(datos$Fecha)
+datos$Exportaciones <- gsub("\\.","",datos$Exportaciones)
+datos$Exportaciones<- gsub(",","\\.",datos$Exportaciones)
+datos$Exportaciones<- as.numeric(datos$Exportaciones)
+datos$`PIB(%)` <- gsub("%","",datos$`PIB(%)`)
+datos$`PIB(%)` <- gsub(",",".",datos$`PIB(%)`)
+datos$`PIB(%)` <- as.numeric(datos$`PIB(%)`)
+datos$VAR <- gsub(",",".",datos$VAR)
+datos$VAR <- as.numeric(datos$VAR)
+str(datos)
 
-Las exportaciones son las ventas de bienes que un país realiza al resto. Las exportaciones suman dentro de la balanza comercial, cuando son mayores que las importaciones la balanza comercial es positiva, o lo que es lo mismo, hay superávit de balanza comercial.
+#Extrayengo el Top 10 de paises
 
-Las exportaciones son importantes porque constituyen una fuente de divisas que a su vez permiten hacer frente a la deuda y a las importaciones y que incrementan los ingresos per cápita. El hecho de que se produzcan bienes para su exportación, incrementa la producción de estos y esto tiene un efecto positivo sobre el empleo.
-```{r tabladatos, echo=FALSE}
-kable(datosend, format = "markdown" ,caption = "Una kable knitr",digits = 3
- , col.names = c("Paises","Fecha","Export(€)","PIB(%)","VAR"), row.names = TRUE)
-```
+datos <- datos[order(-datos$Exportaciones),]
+datosend <- head(datos, n=10)
+datosend
 
-## GRAFICOS GGPLOT
-
-**A continuacion, se muestra dos graficos en donde observaremos:**
-
-**A.Grafico 1 : Nos muestra el top 10 de los paises con mayor exportacion y su varianza en % con respecto al año anterior, el cual se mostrara cuando pasemos el curso en una de las barras, a la ves esta resaltado de color rojo el pais con mayor cantidad en exportacion (euros).**
-
-```{r pressure, echo=FALSE}
 # GRAFICO DONDE SE RESALTA EL PAISES QUE MAYOR EXPORTACION HA TENIDO Y SU VARIACION EN %
 
 
 VAR <- datosend$VAR
-grafico1 <- plot_ly(datosend, x = ~Paises, y = ~`Export(€)`, type = "bar", text =VAR,
-        marker = list(color = c('rgba(270,45,38,2)', 'rgba(204,204,204,1)',
-                                'rgba(204,204,204,1)', 'rgba(204,204,204,1)',
-                                'rgba(204,204,204,1)', 'rgba(204,204,204,1)',
-                                'rgba(204,204,204,1)', 'rgba(204,204,204,1)',
-                                'rgba(204,204,204,1)','rgba(204,204,204,1)')),
-name = "Paises")%>% layout(title = "TOP 10 PAISES CON MAS EXPORTACION Y VARIANZA")
-
+grafico1 <- plot_ly(datosend, x = ~Paises, y = ~Exportaciones, type = "bar", text =VAR,
+                    marker = list(color = c('rgba(270,45,38,2)', 'rgba(204,204,204,1)',
+                                            'rgba(204,204,204,1)', 'rgba(204,204,204,1)',
+                                            'rgba(204,204,204,1)', 'rgba(204,204,204,1)',
+                                            'rgba(204,204,204,1)', 'rgba(204,204,204,1)',
+                                            'rgba(204,204,204,1)','rgba(204,204,204,1)')),
+                    name = "Paises")%>% layout(title = "TOP 10 PAISES CON MAS EXPORTACION Y VARIANZA")
 grafico1
 
-```
+# asdasd
 
-**B.Grafico 2 : Nos muestra  el top 10 de los paises con respecto a su producto interno bruto (PIB %).**
+f <- list(family = "Arial Black", size = 18, color = "#7f7f7f")
+x <- list(title = "Varianza",titlefont = f)
+y <- list(title = "Exportacion PIB(%)",titlefont = f)
+t <- list(title = "VARIANZA Y PIB(%)",titlefont = f)
 
-```{r grafico2, echo=FALSE}
+grafico2 <- plot_ly(data = datosend, x = datosend$VAR, y = datosend$`PIB(%)`, 
+                    name = datosend$Paises, span =30) %>%
+                    layout(xaxis = x, yaxis = y, title= t )
+grafico2
 
 # Realizando grafico de barras usando GGplot2, comparando paises vs Mayor PIB
-
-grafico2 <- datosend %>%
+grafico3 <- datosend %>%
   arrange(desc(datosend$`PIB(%)`)) %>%
   mutate(Paises = factor(Paises , level =  Paises)) %>%
   ggplot(aes(Paises, `PIB(%)`)) + 
@@ -140,7 +128,43 @@ grafico2 <- datosend %>%
   labs(x = "Paises", y= "Exportaciones en PIB %",
         title= "PAISES CON MAS EXPORTACION EN BASE A SU PIB (%)") +
   scale_y_continuous(labels = comma) +
- theme_minimal()
+ theme_minimal() + theme(plot.title = element_text(hjust = 0.5))
   #coord_flip()
+grafico3
+
+```
+
+<h3>**3.TABLA DE CONTENIDO**</h3>
+
+Las exportaciones son las ventas de bienes que un país realiza al resto. Las exportaciones suman dentro de la balanza comercial, cuando son mayores que las importaciones la balanza comercial es positiva, o lo que es lo mismo, hay superávit de balanza comercial.
+
+Las exportaciones son importantes porque constituyen una fuente de divisas que a su vez permiten hacer frente a la deuda y a las importaciones y que incrementan los ingresos per cápita. El hecho de que se produzcan bienes para su exportación, incrementa la producción de estos y esto tiene un efecto positivo sobre el empleo.
+```{r tabladatos, echo=FALSE}
+kable(datosend, format = "markdown" ,caption = "Una kable knitr",digits = 3
+ , col.names = c("Paises","Fecha","Exportaciones"," Exportaciones PIB(%)","VAR"), row.names = TRUE)
+```
+**A continuacion, se muestra 3 graficos en donde observaremos lo siguiente:**
+
+**A.Grafico 1: Muestra el top 10 de los paises con mayor exportacion y su varianza en % con respecto al año anterior, China tiene la mayor en exportaciones (Euros), y su PIB se incrementada de a pocos,esto nos dice que china sigue creciendo,por otro lado, cuando pasemos el curso en una de las barras se muestra la cantidad exacta y su varianza, a la ves esta resaltado de color rojo el pais con mayor cantidad en exportacion (euros).**
+
+```{r pressure, echo=FALSE}
+# GRAFICO DONDE SE RESALTA EL PAISES QUE MAYOR EXPORTACION HA TENIDO Y SU VARIACION EN %
+
+grafico1
+
+```
+** B.Grafico 2: Nos muestra el top 10 del producto interno bruto (PIB %) y su varianza,
+    estos incrementos o disminuciones esta dado en un periodo de un año, el grafico nos indica que Hong Kong tiene     un alto % de Exportacion de PIB con respecto a su varianza**
+
+```{r grafico2, echo=FALSE, message= FALSE}
+
+# Realizando grafico de barras usando GGplot2, comparando varianza vs  PIB
+
 grafico2 
+```
+**C.Grafico 3 : Nos muestra el top 10 de los paises con respecto a su Exportacion (PIB %), por lo tanto se concluye que china es el pais que mas exporta en el mundo, aunque tiene una varianza negativa, todavia sigue crecimiento ya que es superior a muchos**
+```{r grafico3, echo=FALSE, message=FALSE}
+# Realizando grafico de barras usando GGplot2, comparando paises vs Mayor PIB
+grafico3
+
 ```
