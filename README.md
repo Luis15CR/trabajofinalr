@@ -1,1 +1,12 @@
 # trabajofinalr
+* xml2
+* rvest
+* lubridate
+* dplyr
+* ggplot2
+* stringr
+* tidyr
+* scales
+* plotly
+* knitr
+* prettydoc
